@@ -13,5 +13,6 @@ let posts = [
 ];
 
 let comments = [
-    {id: 1, boardId: 1, content: "첫댓글", author:"학생"}
+    {id: 1, boardId: 1, content: "첫댓글", author:"학생"},
+    {id: 2, boardId: 2, content: "2번째 게시글의 댓글", author:"학생"}
 ];

@@ -8,18 +8,42 @@ async function loadPost() {
         const post = await apiRequest(`/board/${postId}`);
         renderPost(post);
         document.querySelector("#post-message").textContent = "";
+        return true;
     } catch (error) {
         document.querySelector("#post-title").textContent = "게시글 조회 실패";
         document.querySelector("#post-content").textContent = "";
         document.querySelector("#post-message").textContent = error.message;
+        return false;
     }
 }
+
+async function loadComments() {
+    try {
+        const comments = await apiRequest(`/board/${postId}/comment`);
+        renderComments(comments)
+    } catch {
+        document.querySelector("#comment-message").textContent = error.message;
+    }
+}
+
 document.querySelector("#comments-section").hidden = true;
 
 
 if (requireLogin()) {
     if (Number.isSafeInteger(postId) && postId > 0) {
-        loadPost();
+        // 비동기 작업을 위한 방법
+        // 1. async / await
+        // 2. Promise -> then() / catch()
+
+        // 게시글 상세 정보 조회
+        loadPost().then(function (success){
+            if (success) {
+                // 댓글 영역 표시
+                document.querySelector("#comments-section").hidden = false;
+                loadComments();
+            }
+        });
+
 
         // // 지금 postId에 해당하는 댓글만 출력하도록 필터링
         // let filteredComments = comments.filter(
@@ -33,8 +57,8 @@ if (requireLogin()) {
 }
 
 // // 댓글 작성 폼 submit 시 댓글 추가
-// document.querySelector("#comment-form").addEventListener("submit", function (event) {
-//     event.preventDefault();
+ document.querySelector("#comment-form").addEventListener("submit", function (event) {
+     event.preventDefault();
 //     const content = document.querySelector("#comment-content").value.trim();
 
 //     // 현재 페이지에 해당하는 게시글이 없거나
@@ -54,4 +78,4 @@ if (requireLogin()) {
 
 //     document.querySelector("#comment-content").value = "";
 //     renderComments(comments.filter(comment => comment.boardId === postId));
-// })
+ });

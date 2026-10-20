@@ -47,6 +47,7 @@ async function apiRequest(path, method = "GET", body = null) {
         if (response.status === 401 && path !== "/user/login") {
             localStorage.removeItem("accessToken");
             requireLogin();
+            throw new Error("로그인 정보가 만료되었거나 유효하지 않습니다. 다시 로그인해주세요.");
         }
         throw new Error(
             result?.message || `요청 실패 (${response.status})`

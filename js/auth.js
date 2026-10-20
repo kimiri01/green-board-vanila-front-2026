@@ -18,27 +18,14 @@ document.querySelector(".logout-button").addEventListener("click", logout)
 
 async function logout() {
     try {
-        const response = await fetch("http://127.0.0.1:8080/api/user/logout", {
-            method: "POST", 
-            headers: {...getAuthHeaders(), "Content-Type": "application/json"}
-        });
-        
-        // HTTP 상태코드가 200이 아니거나, API 성공 여부가 실패인 경우 예외처리
-        if (!response.ok) {
-            // 토큰 리프레시 기능이 연동 계획에서 제외되어
-            // 현재 액세스 토큰 만료 시 재발급을 위해서는 재로그인을 해야는 상황.
-            // 임시로 로그아웃 실패 시에도 스토리지 내 토큰을 비운 뒤 재로그인하도록 수정
-            localStorage.removeItem("accessToken");
-            location.replace("login.html");
-            throw new Error("로그아웃에 실패했습니다.");
-        }
+        const accessToken = localStorage.getItem("accessToken");
+        await apiRequest("/user/logout", "POST", { accessToken });
 
         // 로컬스토리지 내 토큰 제거
         localStorage.removeItem("accessToken");
         // 로그인 페이지로 이동
         location.replace("login.html");
     } catch(error) {
-        // #nav-message.textContent -> alert로 대체
         alert(error.message);
     }
 }

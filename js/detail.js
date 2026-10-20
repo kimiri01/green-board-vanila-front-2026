@@ -5,16 +5,8 @@ const postId = Number(params.get("id"));
 async function loadPost() {
     try {
         // 게시글 상세 조회 API 호출
-        const response = await fetch(`http://127.0.0.1:8080/api/board/${postId}`,
-            { headers: getAuthHeaders()}
-        );
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-            throw new Error(result.message || "게시글 조회 실패");
-        }
-
-        renderPost(result.data);
+        const post = await apiRequest(`/board/${postId}`);
+        renderPost(post);
         document.querySelector("#post-message").textContent = "";
     } catch (error) {
         document.querySelector("#post-title").textContent = "게시글 조회 실패";

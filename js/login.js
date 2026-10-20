@@ -1,10 +1,17 @@
 async function login(event) {
     event.preventDefault();
     const form = event.currentTarget;
-    // const form = document.querySelector("#login-form");
+    const button = form.querySelector("button[type=submit]");
     
     // 로그인 과정에서 문제 발생 시 안내 문구 출력용
     const message = document.querySelector("#login-message");
+
+    if (button.disabled) {
+        return;
+    }
+
+    button.disabled = true;
+    message.textContent = "로그인 중...";
 
     const username = form.elements.username.value.trim();
     const password = form.elements.password.value;
@@ -22,6 +29,8 @@ async function login(event) {
         location.href = "index.html";
     } catch (error) {
         message.textContent = error.message;
+    } finally {
+        button.disabled = false;
     }
 }
 
